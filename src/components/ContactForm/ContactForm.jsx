@@ -1,18 +1,19 @@
 import { Formik, ErrorMessage } from 'formik';
 import * as yup from 'yup';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { Label, Input, Button, Form } from './ContactForm.styled';
 import isNewName from 'services/checkContactName';
-import { selectContacts } from 'redux/selectors';
-import { addContact } from 'redux/operations';
+import {
+  useAddContactMutation,
+  useGetContactsQuery,
+} from 'redux/contactsSlice';
 
 const ContactForm = () => {
-  const dispatch = useDispatch();
-  const contacts = useSelector(selectContacts);
+  const { data } = useGetContactsQuery();
+  const [addContact] = useAddContactMutation();
   const onSubmitForm = (values, { resetForm }) => {
-    if (isNewName(contacts, values.name)) {
-      dispatch(addContact(values));
+    if (isNewName(data, values.name)) {
+      addContact(values);
       resetForm();
     }
   };

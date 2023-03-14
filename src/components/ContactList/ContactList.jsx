@@ -1,16 +1,20 @@
-import { useSelector } from 'react-redux';
 import { BsPersonSquare, BsPhoneFill } from 'react-icons/bs';
 
+import contactsFiltration from 'services/contactsFiltration';
 import Contact from 'components/ContactItem/ContactItem';
 import { ContactsList, Label, Wrapper } from './ContactList.styled';
-import { filteredContacts } from 'redux/selectors';
+import { selectFilter } from 'redux/selectors';
+import { useGetContactsQuery } from 'redux/contactsSlice';
+import { useSelector } from 'react-redux';
 
 const ContactList = () => {
-  const contacts = useSelector(filteredContacts);
+  const filter = useSelector(selectFilter);
+  const { data, error, isLoading } = useGetContactsQuery();
+  const contacts = contactsFiltration(data, filter);
 
   return (
-    <ContactsList>
-      {contacts[0] && (
+    <>
+      {!isLoading && !error ? (
         <Label>
           <Wrapper>
             <i>
@@ -27,11 +31,17 @@ const ContactList = () => {
             <span>Tell:</span>
           </Wrapper>
         </Label>
+      ) : (
+        <h2 style={{ textAlign: 'center' }}>loading...</h2>
       )}
-      {contacts.map(({ id, name, phone }) => (
-        <Contact key={id} id={id} name={name} phone={phone} />
-      ))}
-    </ContactsList>
+      <ContactsList>
+        {!isLoading &&
+          !error &&
+          contacts.map(({ id, name, phone }) => (
+            <Contact key={id} id={id} name={name} phone={phone} />
+          ))}
+      </ContactsList>
+    </>
   );
 };
 

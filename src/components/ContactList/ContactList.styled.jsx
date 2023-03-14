@@ -2,15 +2,16 @@ import styled from '@emotion/styled';
 
 const ContactsList = styled.ul`
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   gap: 10px;
   justify-content: center;
 `;
 
 const Label = styled.div`
   display: flex;
-  margin-left: 50px;
+  margin-left: 60px;
   gap: 180px;
+  margin-bottom: 14px;
   align-items: center;
 
   & span {
